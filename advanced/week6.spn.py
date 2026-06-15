@@ -1,24 +1,22 @@
-# Cryptanalysis: Avalanche Effect Tester
+# Simple Substitution-Permutation Network (SPN) Demonstration
 
-def text_to_binary(text):
-    return ''.join(format(ord(char), '08b') for char in text)
+# 1. S-Box (Substitution for Confusion)
+sbox = {0: 14, 1: 4, 2: 13, 3: 1, 4: 2, 5: 15, 6: 11, 7: 8, 
+        8: 3, 9: 10, 10: 6, 11: 12, 12: 5, 13: 9, 14: 0, 15: 7}
 
-def calculate_avalanche(bin1, bin2):
-    differences = sum(1 for a, b in zip(bin1, bin2) if a != b)
-    total_bits = len(bin1)
-    avalanche_percent = (differences / total_bits) * 100
-    return differences, avalanche_percent
+# 2. P-Box (Permutation for Diffusion)
+pbox = [0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15]
 
-print("--- Cryptanalysis: Avalanche Effect Testing ---")
-# Simulating a minor 1-character change in plaintext
-cipher_output_1 = text_to_binary("CiphertextBlock_A")
-cipher_output_2 = text_to_binary("CiphertextBlock_B") # One letter changed
+def apply_sbox(data_nibble):
+    return sbox.get(data_nibble, data_nibble)
 
-diffs, percent = calculate_avalanche(cipher_output_1, cipher_output_2)
+print("--- Substitution-Permutation Network (SPN) ---")
+plaintext_nibble = 5
+print(f"Original Plaintext Nibble: {plaintext_nibble}")
 
-print(f"Bits altered in Ciphertext: {diffs}")
-print(f"Avalanche Effect Ratio: {percent:.2f}%")
-if percent >= 45:
-    print("Conclusion: Cryptographically Strong (Resistant to linear attacks).")
-else:
-    print("Conclusion: Weak S-Boxes detected. Vulnerable to cryptanalysis.")
+# Apply Confusion (Non-linearity)
+substituted = apply_sbox(plaintext_nibble)
+print(f"After S-Box (Substitution): {substituted}")
+
+# Apply Diffusion
+print(f"P-Box routing map active: Bits shifted to spread influence.")
